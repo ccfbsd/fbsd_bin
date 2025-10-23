@@ -1,0 +1,3 @@
+#!/bin/sh
+
+git clone --depth 1 -b stable/15 https://git.freebsd.org/src.git /usr/src
