@@ -1,12 +1,13 @@
-#!/bin/sh
-# Description: Build the kernel with a specified KERNCONF using all CPU cores
-# Usage: ./buildkernel.sh KERNCONF_NAME
+#!/usr/bin/env bash
 
-if [ $# -ne 1 ]; then
-    echo "Usage: $0 KERNCONF_NAME"
+# Description: Build the kernel with an optional KERNCONF using all CPU cores
+# Usage: ./buildkernel.sh [KERNCONF_NAME]
+
+if [[ $EUID -ne 0 ]]; then
+    echo "Error: this script must be run as root." >&2
     exit 1
 fi
 
-KCONF="$1"
+KCONF="${1:-$(uname -i)}"
 
-make -j"$(sysctl -n hw.ncpu)" KERNCONF="$KCONF" kernel -DWITHOUT_CLEAN > /tmp/kernel.log 2>&1
+make -j"$(sysctl -n hw.ncpu)" KERNCONF="$KCONF" buildkernel > /tmp/kernel.log 2>&1
